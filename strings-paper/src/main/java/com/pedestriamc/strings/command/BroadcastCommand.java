@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import com.pedestriamc.strings.api.settings.Option;
 
 public class BroadcastCommand implements CommandExecutor {
 
@@ -36,7 +37,7 @@ public class BroadcastCommand implements CommandExecutor {
         }
         String message = sb.toString().trim();
 
-        String broadcastFormat = plugin.getSettings().get(com.pedestriamc.strings.api.settings.Option.Text.BROADCAST_FORMAT);
+        String broadcastFormat = plugin.getSettings().get(Option.Text.BROADCAST_FORMAT);
         Bukkit.broadcast(LegacyComponentSerializer.legacyAmpersand().deserialize(broadcastFormat + message));
 
         return true;

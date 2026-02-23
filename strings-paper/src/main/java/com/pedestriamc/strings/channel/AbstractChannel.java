@@ -6,11 +6,12 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -183,7 +184,7 @@ public abstract class AbstractChannel implements Channel {
         broadcastPlain(LegacyComponentSerializer.legacyAmpersand().deserialize(formatted));
         if (broadcastSound != null) {
             for (StringsUser user : getPlayersInScope()) {
-                org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(user.getUniqueId());
+                Player player = Bukkit.getPlayer(user.getUniqueId());
                 if (player != null) {
                     player.playSound(broadcastSound);
                 }
@@ -193,8 +194,6 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void broadcast(@NotNull Component message) {
-        // Broadacst with format?
-        // For simplicity let's just broadcast plain for now if it's already a component
         broadcastPlain(message);
     }
 

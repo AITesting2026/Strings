@@ -4,6 +4,9 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -89,7 +92,11 @@ public class ChannelLoaderImpl implements ChannelLoader {
         }
 
         if (getChannel("global") == null) {
-            register(new GlobalChannel("global", "&8[&bGlobal&8] &7{displayname}&8: &f{message}", Membership.DEFAULT, 0));
+            Channel global = Channel.builder("global", "&8[&bGlobal&8] &7{displayname}&8: &f{message}", Membership.DEFAULT)
+                    .setPriority(0)
+                    .build(IChannelBuilder.Identifier.NORMAL);
+            register(global);
+            registerChannelSymbol("!", global);
         }
     }
 
@@ -103,44 +110,31 @@ public class ChannelLoaderImpl implements ChannelLoader {
             membership = Membership.DEFAULT;
         }
         int priority = sec.getInt("priority", 0);
+        IChannelBuilder.Identifier identifier = IChannelBuilder.Identifier.of(typeStr);
 
-        Channel channel;
-        switch (typeStr.toLowerCase()) {
-            case "world":
-            case "world_strict":
-                WorldChannel wc = new WorldChannel(name, format, membership, priority);
-                Set<String> worldNames = new HashSet<>(sec.getStringList("worlds"));
-                Set<Locality<World>> localities = worldNames.stream()
-                        .map(Bukkit::getWorld)
-                        .filter(java.util.Objects::nonNull)
-                        .map(w -> Locality.of(w, w.getName()))
-                        .collect(Collectors.toSet());
-                wc.setWorlds(localities);
-                channel = wc;
-                break;
-            case "proximity":
-            case "proximity_strict":
-                ProximityChannel pc = new ProximityChannel(name, format, membership, priority, sec.getDouble("distance", 100));
-                Set<String> pWorldNames = new HashSet<>(sec.getStringList("worlds"));
-                Set<Locality<World>> pLocalities = pWorldNames.stream()
-                        .map(Bukkit::getWorld)
-                        .filter(java.util.Objects::nonNull)
-                        .map(w -> Locality.of(w, w.getName()))
-                        .collect(Collectors.toSet());
-                pc.setWorlds(pLocalities);
-                channel = pc;
-                break;
-            default:
-                channel = new GlobalChannel(name, format, membership, priority);
-                break;
+        IChannelBuilder<?> builder;
+        if (identifier == IChannelBuilder.Identifier.NORMAL || identifier == IChannelBuilder.Identifier.HELPOP) {
+            builder = Channel.builder(name, format, membership);
+        } else {
+            Set<String> worldNames = new HashSet<>(sec.getStringList("worlds"));
+            Set<Locality<World>> localities = worldNames.stream()
+                    .map(Bukkit::getWorld)
+                    .filter(java.util.Objects::nonNull)
+                    .map(w -> Locality.of(w, w.getName()))
+                    .collect(Collectors.toSet());
+            builder = Channel.localBuilder(name, format, membership, localities);
+            if (builder instanceof LocalChannelBuilder<?> localBuilder) {
+                localBuilder.setDistance(sec.getDouble("distance", 100));
+            }
         }
 
-        channel.setUrlFilter(sec.getBoolean("url-filter", false));
-        channel.setProfanityFilter(sec.getBoolean("profanity-filter", false));
-        channel.setDoCooldown(sec.getBoolean("cooldown", false));
-        channel.setAllowMessageDeletion(sec.getBoolean("allow-deletion", true));
+        builder.setPriority(priority)
+               .setDoUrlFilter(sec.getBoolean("url-filter", false))
+               .setDoProfanityFilter(sec.getBoolean("profanity-filter", false))
+               .setDoCooldown(sec.getBoolean("cooldown", false))
+               .setAllowMessageDeletion(sec.getBoolean("allow-deletion", true));
 
-        return channel;
+        return builder.build(identifier);
     }
 
     @Override

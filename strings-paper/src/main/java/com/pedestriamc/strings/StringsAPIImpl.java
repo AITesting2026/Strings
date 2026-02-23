@@ -3,9 +3,14 @@ package com.pedestriamc.strings;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.api.user.StringsUser;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,27 +50,27 @@ public class StringsAPIImpl implements StringsAPI {
 
     @Override
     public void mention(@NotNull StringsUser subject, @NotNull StringsUser sender) {
-        String mentionFormat = plugin.getSettings().get(com.pedestriamc.strings.api.settings.Option.Text.MENTION_TEXT_ACTION_BAR);
+        String mentionFormat = plugin.getSettings().get(Option.Text.MENTION_TEXT_ACTION_BAR);
         String message = mentionFormat.replace("%sender%", sender.getName());
         sendMention(subject, message);
 
-        String soundName = plugin.getSettings().get(com.pedestriamc.strings.api.settings.Option.Text.MENTION_SOUND);
-        double volume = plugin.getSettings().get(com.pedestriamc.strings.api.settings.Option.Double.MENTION_VOLUME).floatValue();
-        double pitch = plugin.getSettings().get(com.pedestriamc.strings.api.settings.Option.Double.MENTION_PITCH).floatValue();
+        String soundName = plugin.getSettings().get(Option.Text.MENTION_SOUND);
+        double volume = plugin.getSettings().get(Option.Double.MENTION_VOLUME);
+        double pitch = plugin.getSettings().get(Option.Double.MENTION_PITCH);
 
-        org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(subject.getUniqueId());
+        Player player = Bukkit.getPlayer(subject.getUniqueId());
         if (player != null) {
             try {
-                player.playSound(player.getLocation(), org.bukkit.Sound.valueOf(soundName), (float)volume, (float)pitch);
+                player.playSound(player.getLocation(), Sound.valueOf(soundName), (float)volume, (float)pitch);
             } catch (IllegalArgumentException ignored) {}
         }
     }
 
     @Override
     public void sendMention(@NotNull StringsUser user, @NotNull String message) {
-        org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(user.getUniqueId());
+        Player player = Bukkit.getPlayer(user.getUniqueId());
         if (player != null) {
-            player.sendActionBar(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand().deserialize(message));
+            player.sendActionBar(LegacyComponentSerializer.legacyAmpersand().deserialize(message));
         }
     }
 

@@ -1,10 +1,13 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.user.UserManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +59,7 @@ public class UserManagerImpl implements UserManager {
             config.set("discord-id", user.getDiscordId().get());
         }
         config.set("active-channel", user.getActiveChannel() != null ? user.getActiveChannel().getName() : null);
-        config.set("joined-channels", user.getChannels().stream().map(com.pedestriamc.strings.api.channel.Channel::getName).collect(Collectors.toList()));
+        config.set("joined-channels", user.getChannels().stream().map(Channel::getName).collect(Collectors.toList()));
 
         try {
             config.save(userFile);
@@ -91,14 +94,14 @@ public class UserManagerImpl implements UserManager {
 
             String activeChannelName = config.getString("active-channel");
             if (activeChannelName != null) {
-                com.pedestriamc.strings.api.channel.Channel activeChan = plugin.getChannelLoader().getChannel(activeChannelName);
+                Channel activeChan = plugin.getChannelLoader().getChannel(activeChannelName);
                 if (activeChan != null) {
                     user.setActiveChannel(activeChan);
                 }
             }
 
             for (String chanName : config.getStringList("joined-channels")) {
-                com.pedestriamc.strings.api.channel.Channel chan = plugin.getChannelLoader().getChannel(chanName);
+                Channel chan = plugin.getChannelLoader().getChannel(chanName);
                 if (chan != null) {
                     user.joinChannel(chan);
                 }
@@ -137,26 +140,26 @@ public class UserManagerImpl implements UserManager {
         @Override public void setSuffix(@NotNull String suffix) {}
         @Override public @NotNull String getDisplayName() { return ""; }
         @Override public void setDisplayName(@NotNull String displayName) {}
-        @Override public @NotNull com.pedestriamc.strings.api.channel.Channel getActiveChannel() { return null; }
-        @Override public void setActiveChannel(@NotNull com.pedestriamc.strings.api.channel.Channel channel) {}
-        @Override public @NotNull Set<com.pedestriamc.strings.api.channel.Channel> getChannels() { return Collections.emptySet(); }
-        @Override public void joinChannel(@NotNull com.pedestriamc.strings.api.channel.Channel channel) {}
-        @Override public void leaveChannel(@NotNull com.pedestriamc.strings.api.channel.Channel channel) {}
-        @Override public boolean memberOf(@NotNull com.pedestriamc.strings.api.channel.Channel channel) { return false; }
+        @Override public @NotNull Channel getActiveChannel() { return null; }
+        @Override public void setActiveChannel(@NotNull Channel channel) {}
+        @Override public @NotNull Set<Channel> getChannels() { return Collections.emptySet(); }
+        @Override public void joinChannel(@NotNull Channel channel) {}
+        @Override public void leaveChannel(@NotNull Channel channel) {}
+        @Override public boolean memberOf(@NotNull Channel channel) { return false; }
         @Override public boolean isMentionsEnabled() { return false; }
         @Override public void setMentionsEnabled(boolean mentionsEnabled) {}
         @Override public boolean isIgnoring(@NotNull StringsUser other) { return false; }
         @Override public void ignore(@NotNull StringsUser user) {}
         @Override public void stopIgnoring(@NotNull StringsUser user) {}
         @Override public Set<UUID> getIgnoredPlayers() { return Collections.emptySet(); }
-        @Override public boolean isMonitoring(@NotNull com.pedestriamc.strings.api.channel.Monitorable monitorable) { return false; }
-        @Override public void monitor(@NotNull com.pedestriamc.strings.api.channel.Monitorable monitorable) {}
-        @Override public void unmonitor(@NotNull com.pedestriamc.strings.api.channel.Monitorable monitorable) {}
-        @Override public @NotNull Set<com.pedestriamc.strings.api.channel.Channel> getMonitoredChannels() { return Collections.emptySet(); }
-        @Override public void muteChannel(@NotNull com.pedestriamc.strings.api.channel.Channel channel) {}
-        @Override public void unmuteChannel(@NotNull com.pedestriamc.strings.api.channel.Channel channel) {}
-        @Override public @NotNull Set<com.pedestriamc.strings.api.channel.Channel> getMutedChannels() { return Collections.emptySet(); }
-        @Override public boolean hasChannelMuted(@NotNull com.pedestriamc.strings.api.channel.Channel channel) { return false; }
+        @Override public boolean isMonitoring(@NotNull Monitorable monitorable) { return false; }
+        @Override public void monitor(@NotNull Monitorable monitorable) {}
+        @Override public void unmonitor(@NotNull Monitorable monitorable) {}
+        @Override public @NotNull Set<Channel> getMonitoredChannels() { return Collections.emptySet(); }
+        @Override public void muteChannel(@NotNull Channel channel) {}
+        @Override public void unmuteChannel(@NotNull Channel channel) {}
+        @Override public @NotNull Set<Channel> getMutedChannels() { return Collections.emptySet(); }
+        @Override public boolean hasChannelMuted(@NotNull Channel channel) { return false; }
         @Override public boolean hasDirectMessagesEnabled() { return false; }
         @Override public void setDirectMessagesEnabled(boolean msgEnabled) {}
         @Override public boolean isDiscordLinked() { return false; }
@@ -165,6 +168,6 @@ public class UserManagerImpl implements UserManager {
         @Override public boolean isNew() { return false; }
         @Override public boolean hasPermission(@NotNull String permission) { return false; }
         @Override public void sendMessage(@NotNull String message) {}
-        @Override public void sendMessage(@NotNull net.kyori.adventure.text.Component message) {}
+        @Override public void sendMessage(@NotNull Component message) {}
     }
 }

@@ -1,0 +1,23 @@
+channels:
+  global:
+    type: stringchannel
+    format: "&8[&bGlobal&8] &7{displayname}&8: &f{message}"
+    membership: DEFAULT
+    priority: 0
+    symbol: "!"
+  staff:
+    type: stringchannel
+    format: "&8[&cStaff&8] &e{displayname}&8: &f{message}"
+    membership: PERMISSION
+    priority: 100
+    symbol: "@"
+  local:
+    type: proximity
+    format: "&8[&aLocal&8] &7{displayname}&8: &f{message}"
+    membership: DEFAULT
+    priority: 50
+    distance: 100
+    worlds:
+      - world
+      - world_nether
+      - world_the_end

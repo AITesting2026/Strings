@@ -71,13 +71,9 @@ public class WorldChannel extends AbstractChannel implements LocalChannel<World>
 
     @Override
     public Set<StringsUser> getPlayersInScope() {
-        Strings plugin = Strings.getInstance();
-        if (plugin != null && plugin.getUserManager() != null) {
-            return plugin.getUserManager().getUsers().stream()
-                    .filter(this::containsInScope)
-                    .collect(Collectors.toSet());
-        }
-        return Set.of();
+        return Strings.getInstance().getUserManager().getUsers().stream()
+                .filter(this::containsInScope)
+                .collect(Collectors.toSet());
     }
 
     @Override

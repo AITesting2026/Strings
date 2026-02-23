@@ -2,9 +2,9 @@ package com.pedestriamc.strings.command;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,18 +39,14 @@ public class ChannelCommand implements CommandExecutor {
         String subCommand = args[0].toLowerCase();
 
         switch (subCommand) {
-            case "join":
-                handleJoin(user, args);
-                break;
-            case "leave":
-                handleLeave(user, args);
-                break;
-            case "list":
-                handleList(user);
-                break;
-            default:
-                handleSetActive(user, args[0]);
-                break;
+            case "join" -> handleJoin(user, args);
+            case "leave" -> handleLeave(user, args);
+            case "list" -> handleList(user);
+            case "mute" -> handleMute(user, args);
+            case "unmute" -> handleUnmute(user, args);
+            case "monitor" -> handleMonitor(user, args);
+            case "unmonitor" -> handleUnmonitor(user, args);
+            default -> handleSetActive(user, args[0]);
         }
 
         return true;
@@ -119,6 +115,86 @@ public class ChannelCommand implements CommandExecutor {
                 plugin.getMessenger().sendMessagePlain(Message.CHANNEL_LIST_ENTRY, user, Map.of("channel", channel.getName()));
             }
         }
+    }
+
+    private void handleMute(StringsUser user, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessenger().sendMessage(Message.INSUFFICIENT_ARGS, user);
+            return;
+        }
+        Channel channel = plugin.getChannelLoader().getChannel(args[1]);
+        if (channel == null) {
+            plugin.getMessenger().sendMessage(Message.UNKNOWN_CHANNEL, user);
+            return;
+        }
+        if (user.hasChannelMuted(channel)) {
+            plugin.getMessenger().sendMessage(Message.ALREADY_MUTED, user);
+            return;
+        }
+        user.muteChannel(channel);
+        plugin.getMessenger().sendMessage(Message.MUTE_SUCCESS, user, Map.of("channel", channel.getName()));
+    }
+
+    private void handleUnmute(StringsUser user, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessenger().sendMessage(Message.INSUFFICIENT_ARGS, user);
+            return;
+        }
+        Channel channel = plugin.getChannelLoader().getChannel(args[1]);
+        if (channel == null) {
+            plugin.getMessenger().sendMessage(Message.UNKNOWN_CHANNEL, user);
+            return;
+        }
+        if (!user.hasChannelMuted(channel)) {
+            plugin.getMessenger().sendMessage(Message.NOT_MUTED, user);
+            return;
+        }
+        user.unmuteChannel(channel);
+        plugin.getMessenger().sendMessage(Message.UNMUTE_SUCCESS, user, Map.of("channel", channel.getName()));
+    }
+
+    private void handleMonitor(StringsUser user, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessenger().sendMessage(Message.INSUFFICIENT_ARGS, user);
+            return;
+        }
+        Channel channel = plugin.getChannelLoader().getChannel(args[1]);
+        if (channel == null) {
+            plugin.getMessenger().sendMessage(Message.UNKNOWN_CHANNEL, user);
+            return;
+        }
+        if (!(channel instanceof Monitorable monitorable)) {
+            plugin.getMessenger().sendMessage(Message.NOT_MONITORABLE, user);
+            return;
+        }
+        if (user.isMonitoring(monitorable)) {
+            plugin.getMessenger().sendMessage(Message.ALREADY_MONITORING, user);
+            return;
+        }
+        user.monitor(monitorable);
+        plugin.getMessenger().sendMessage(Message.MONITOR_SUCCESS, user, Map.of("channel", channel.getName()));
+    }
+
+    private void handleUnmonitor(StringsUser user, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessenger().sendMessage(Message.INSUFFICIENT_ARGS, user);
+            return;
+        }
+        Channel channel = plugin.getChannelLoader().getChannel(args[1]);
+        if (channel == null) {
+            plugin.getMessenger().sendMessage(Message.UNKNOWN_CHANNEL, user);
+            return;
+        }
+        if (!(channel instanceof Monitorable monitorable)) {
+            plugin.getMessenger().sendMessage(Message.NOT_MONITORABLE, user);
+            return;
+        }
+        if (!user.isMonitoring(monitorable)) {
+            plugin.getMessenger().sendMessage(Message.NOT_MONITORING, user);
+            return;
+        }
+        user.unmonitor(monitorable);
+        plugin.getMessenger().sendMessage(Message.UNMONITORED, user, Map.of("channel", channel.getName()));
     }
 
     private void handleSetActive(StringsUser user, String channelName) {

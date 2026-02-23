@@ -1,0 +1,38 @@
+# Strings Configuration
+process-in-chat-colors: true
+enable-chatcolor: true
+process-in-chat-placeholders: true
+enable-join-leave-messages: true
+custom-join-leave-message: false
+enable-motd: false
+placeholder-api: true
+enable-mentions: true
+mention-everyone: true
+enable-helpop: true
+other-helpop: false
+msg-enabled: true
+resolution-validation: true
+enable-rules: true
+
+msg-format-outgoing: "&8(&7me &8» &7{recipient_username}&8) &e{message}"
+msg-format-receiving: "&8(&7{sender_username} &8» &7me&8) &e{message}"
+social-spy-format: "&8[&cSocialSpy&8] &8(&7{sender_username} &8» &7{recipient_username}&8) &7{message}"
+join-message: "&8[&a+&8] &f{username} &7has joined the server."
+leave-message: "&8[&4-&8] &f{username} &7has left the server."
+broadcast-format: "&8[&3Broadcast&8] &f"
+mention-chat-format: "&7"
+mention-color: "&e"
+mention-format: "&e%sender% mentioned you."
+mention-sound: "BLOCK_NOTE_BLOCK_PLING"
+mention-pitch: 0.594604
+mention-vol: 10
+
+deletion-button: "<dark_gray>[<red>×</red>]</dark_gray>"
+deletion-hover: "<red>Click this to delete the message.</red>"
+rules-message: "<b>Rules</b>\n - Follow the rules!"
+
+broadcast-sound:
+  enable: true
+  name: "block.note_block.bell"
+  pitch: 0.5
+  volume: 1.0
