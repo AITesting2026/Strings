@@ -1,0 +1,202 @@
+name: Strings
+version: '1.7.0'
+main: com.pedestriamc.strings.Strings
+api-version: 1.16
+prefix: Strings
+author: wiicart
+description: "A chat plugin."
+website: pedestriamc.com
+softdepend: [PlaceholderAPI, Vault, Multiverse-Core, MultiWorld]
+loadbefore: [StringsModeration]
+commands:
+  clearchat:
+    description: "Clears in-game chat"
+    usage: "/clearchat"
+  chatclear:
+    description: "Clears in-game chat"
+    usage: "/chatclear"
+  broadcast:
+    description: "Broadcasts text"
+    usage: "/broadcast <text>"
+  announce:
+    description: "Broadcasts text"
+    usage: "/announce <text>"
+  msg:
+    description: "Direct message players"
+    usage: "/msg <player> <message>"
+  message:
+    description: "Direct message players"
+    usage: "/message <player> <message>"
+  reply:
+    description: "Reply to messages"
+    usage: "/reply <message>"
+  r:
+    description: "Reply to messages"
+    usage: "/r <message>"
+  socialspy:
+    description: "See all player's direct messages"
+    usage: "/socialspy"
+  channel:
+    description: "Join, leave and set active channels"
+    usage: "/channel"
+  c:
+    description: "Join, leave and set active channels"
+    usage: "/c"
+  helpop:
+    description: "Send a message to server operators"
+    usage: "/helpop <message>"
+  strings:
+    description: "Tells the plugin version and allows reloading"
+    usage: "/strings version/reload"
+  mention:
+    description: "Toggles whether you receive mentions or not"
+    usage: "/mention <enable|disable>"
+  mentions:
+    description: "Toggles whether you receive mentions or not"
+    usage: "/mentions <enable|disable>"
+  ignore:
+    description: "Allows ignoring another player"
+    usage: "/ignore <player-to-ignore> <player-ignoring (optional)>"
+  unignore:
+    description: "Lets a player stop ignoring another player"
+    usage: "/unignore <player-to-unignore> <player-ignoring (optional)>"
+  rules:
+    description: "Shows the server rules"
+    usage: "/rules"
+  chatcolor:
+    description: "Sets a player's chat color"
+    usage: "/chatcolor <color>"
+  emoji:
+    description: "Shows the emoji menu"
+    usage: "/emoji"
+permissions:
+  strings.*:
+    description: "All Strings permissions"
+    default: op
+    children:
+      strings.chat.*: true
+      strings.socialspy: true
+  strings.chat.*:
+    description: "All chat permissions"
+    default: op
+    children:
+      strings.chat.colormsg: true
+      strings.chat.placeholdermsg: true
+      strings.chat.clear: true
+      strings.chat.clear.others: true
+      strings.chat.broadcast: true
+  strings.chat.colormsg:
+    description: "Allows coloring messages with color codes"
+    default: true
+  strings.chat.placeholdermsg:
+    description: "Allows use of placeholders in messages"
+    default: false
+  strings.chat.clear:
+    description: "Allows clearing your own chat"
+    default: false
+    children:
+      strings.chat.clear.others: false
+  strings.chat.clear.others:
+    description: "Allows clearing all players' chat"
+    default: false
+  strings.chat.broadcast:
+    description: "Allows sending server broadcasts"
+    default: false
+  strings.chat.msg:
+    description: "Allows directly messaging players"
+    default: true
+  strings.chat.msg.exempt:
+    description: "Makes it so this player cannot be messaged unless the sender has permission strings.chat.msg.admin"
+    default: false
+  strings.chat.msg.admin:
+    description: "Makes it so that this player can message any player, regardless of strings.chat.msg.exempt status"
+    default: false
+  strings.socialspy:
+    description: "Allows use of the /socialspy command"
+    default: false
+  strings.channels.<channel>:
+    description: "Allows a player to join specified channel"
+    default: false
+  strings.channels.global:
+    description: "Allows use of the /channel commands with the global channel"
+    default: true
+  strings.channel.modifyplayers:
+    description: "Allows a player to manipulate another player's channels"
+    default: false
+  strings.helpop.receive:
+    description: "Allows receiving HelpOP messages"
+    default: false
+  strings.helpop.use:
+    description: "Allows sending Help OP messages"
+    default: true
+  strings.chat.bypasscooldown:
+    description: "Allows bypassing the chat cooldown"
+    default: false
+  strings.reload:
+    description: "Allows reloading the Strings plugin"
+    default: false
+  strings.chat.filterbypass:
+    description: "Allows bypassing the chat filter"
+    default: false
+  strings.chat.bypassrepetition:
+    description: "Allows bypassing repetition checks"
+    default: false
+  strings.channels.*:
+    description: "Permission to use all Channels."
+    default: false
+  strings.channels.default:
+    description: "Allows use of default channels! It is strongly encouraged that all players have this permission."
+    default: true
+  strings.mention.*:
+    description: "All mentioning permissions"
+    default: op
+    children:
+      strings.mention: true
+      strings.mention.all: true
+      strings.mention.group: true
+      strings.mention.toggle: true
+  strings.mention:
+    description: "Allows mentioning players in chat using @<username>"
+    default: true
+    children:
+      strings.mention.all: false
+      strings.mention.group: false
+      strings.mention.toggle: true
+  strings.mention.all:
+    description: "Allows mentioning all players with @everyone"
+    default: op
+  strings.mention.group:
+    description: "Allows mentioning LuckPerms groups"
+    default: op
+  strings.mention.toggle:
+    description: "Allows toggling whether you receive mentions or not"
+    default: true
+  strings.channels.global.receive:
+    description: "Allows players to receive messages from the global channel"
+    default: true
+  strings.channels.<channel>.broadcast:
+    description: "Allows players to broadcast a message to a Channel."
+    default: op
+  strings.chat.ignore:
+    description: "Allows ignoring players."
+    default: true
+    children:
+      strings.chat.ignore.other: false
+  strings.chat.ignore.other:
+    default: op
+    description: "Allows ignoring a Player for another Player."
+  strings.chat.unignorable:
+    default: op
+    description: "Makes it so that Players cannot ignore this Player."
+  strings.chat.bypass-unignorable:
+    default: op
+    description: "Allows ignoring players that have the strings.chat.unignorable permission."
+  strings.chat.delete-messages:
+    default: true
+    description: "Allows players to delete their own messages in Channels that allow message deletion."
+  strings.chat.delete-messages.others:
+    default: op
+    description: "Allows players to delete any player's message in a Channel that allows message deletion."
+  strings.chat.emojis:
+    default: true
+    description: "Players with this permission will have emoji placeholders like :smile: replaced with emoji equivalents, if enabled."
