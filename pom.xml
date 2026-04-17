@@ -18,6 +18,7 @@
         <module>strings-discord</module>
         <module>strings-common</module>
         <module>strings-hytale</module>
+        <module>strings-paper</module>
     </modules>
     <properties>
         <java.version>21</java.version>
