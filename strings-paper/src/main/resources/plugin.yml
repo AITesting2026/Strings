@@ -1,0 +1,41 @@
+name: Strings
+version: ${project.version}
+main: com.pedestriamc.strings.paper.StringsPaper
+api-version: '1.21'
+author: Wiicart
+description: A comprehensive chat plugin for Paper.
+depend: []
+softdepend: [Vault, PlaceholderAPI, LuckPerms, StringsModeration]
+commands:
+  broadcast:
+    description: Broadcasts a message to the server.
+    permission: strings.chat.broadcast
+  clearchat:
+    description: Clears chat.
+    permission: strings.chat.clear
+  channel:
+    description: Manages channels.
+    permission: strings.channel
+  msg:
+    description: Messages a player.
+    permission: strings.chat.msg
+  r:
+    description: Responds to a player.
+    permission: strings.chat.msg
+  helpop:
+    description: Sends a help op message.
+    permission: strings.helpop.use
+  socialspy:
+    description: Toggles socialspy.
+    permission: strings.socialspy
+  chatcolor:
+    description: Changes chat color.
+    permission: strings.chat.chatcolor
+  ignore:
+    description: Ignores a player.
+    permission: strings.chat.msg
+  emoji:
+    description: Opens emoji menu.
+    permission: strings.chat.emoji
+  strings:
+    description: Strings main command.
